@@ -71,6 +71,16 @@ DLL は SPIRV-Tools 非依存（`ENABLE_OPT=OFF`）かつ CRT 静的リンク（
 
 > ※ glslang のライセンスは BSD-3-Clause ／ Apache-2.0（[`LICENSE.txt`](https://github.com/KhronosGroup/glslang/blob/main/LICENSE.txt)）であり、この再頒布が許諾されています。
 
+#### ▼ 1.3.1. GLSL のみをサポート
+
+glslang は **HLSL** もコンパイルできますが、本ライブラリは **GLSL のみ**をサポートします（`TVkShader` は常に GLSL のフロントエンドを選択します）。
+
+これは意図的なものです。glslang の HLSL フロントエンドは**非推奨であり、将来のメジャーリリースで削除されます**（[glslang issue #4210](https://github.com/KhronosGroup/glslang/issues/4210)）。将来性が無いため、これを土台にはしません。
+HLSL が必要な場合は、SPIR-V を直接出力できる [DXC](https://github.com/microsoft/DirectXShaderCompiler) を使用してください。
+なお [Slang](https://github.com/shader-slang/slang) は glslang とは全く別のコンパイラであり、glslang には含まれません。
+
+また、ソースの言語が**自動判別されることはありません**。GLSL と HLSL は `glslang_input_t.language` で明示的に選択します。
+
 ### ⬤ 1.4. [`/Stream`](https://github.com/LUXOPHIA/LUX.Vulkan/tree/main/Stream) ：FMX ストリーム
 
 `TVkImager` と FireMonkey の `TBitmap` の間で画像をコピーします（[`TVkStream1D_FMX`](https://github.com/LUXOPHIA/LUX.Vulkan/blob/main/Stream/LUX.Vulkan.Stream.FMX.D1.pas) ／ [`TVkStream2D_FMX`](https://github.com/LUXOPHIA/LUX.Vulkan/blob/main/Stream/LUX.Vulkan.Stream.FMX.D2.pas)）。
@@ -192,6 +202,14 @@ GLSL ソースをロードすると、最初の使用時に**実行時コンパ�
 > _Shader.Binary.SaveToStream( Stream );        // （TStream 版もあります）
 > _Shader.Binary.LoadFromStream( Stream );
 > ```
+
+#### ▼ 2.6.1. `glslang.dll` を同梱しない配布
+
+`glslang.dll` は、GLSL を実際にコンパイルする必要が生じたときにだけ**遅延ロード**されます。
+そのため、コンパイル済の `.spv` を同梱するアプリケーションであれば、**`glslang.dll` を配布する必要は一切ありません**。ロード・リフレクション・実行のいずれも DLL 無しで動作し、エラーにもなりません。
+
+> ※ 代入は **`Source` を先に、`Binary` を後に**行なってください。
+> `Source` へ書き込むと、現在の `Binary` は破棄されます（GLSL を編集した以上、コンパイル済の結果は無効とみなすため）。`.spv` をロードした後に表示用の `Source` を代入すると、SPIR-V が捨てられてしまいます。
 
 ### ⬤ 2.7. カーネル
 「**カーネル**」オブジェクト（`TVkKernel`）は演算パイプライン（`VkPipeline`）であり、シェーダのリフレクション結果から記述子セットレイアウト／パイプラインレイアウト／記述子プール／記述子セットを内部で生成します。
