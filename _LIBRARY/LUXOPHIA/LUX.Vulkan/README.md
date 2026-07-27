@@ -62,6 +62,16 @@ The DLLs are built without SPIRV-Tools（`ENABLE_OPT=OFF`）and with a staticall
 
 > ※ glslang is licensed under BSD-3-Clause / Apache-2.0（see [`LICENSE.txt`](https://github.com/KhronosGroup/glslang/blob/main/LICENSE.txt)）, which permits this redistribution.
 
+#### ▼ 1.2.1. GLSL only
+
+glslang can also compile **HLSL**, but this library supports **GLSL only** — `TVkShader` always selects the GLSL front-end.
+
+This is deliberate: the HLSL front-end of glslang is **deprecated and will be removed in a future major release**（[glslang issue #4210](https://github.com/KhronosGroup/glslang/issues/4210)）, so building on it would be a dead end.
+If you need HLSL, use [DXC](https://github.com/microsoft/DirectXShaderCompiler)（which emits SPIR-V directly）instead.
+[Slang](https://github.com/shader-slang/slang) is a separate compiler altogether and is not part of glslang.
+
+Note also that the source language is **never auto-detected** — GLSL and HLSL are chosen explicitly through `glslang_input_t.language`.
+
 ### ⬤ 1.3. [`/Core`](https://github.com/LUXOPHIA/LUX.Vulkan/tree/main/Core) ＋ [`LUX.Vulkan.pas`](https://github.com/LUXOPHIA/LUX.Vulkan/blob/main/LUX.Vulkan.pas) : The core class library
 
 Devices, queues, memory, shaders and the compute pipeline — everything that does not depend on graphics.
@@ -393,7 +403,7 @@ A GLSL source that shaders `#include`. It is resolved **by name** at compile tim
 | `Source :TVkSource` | The GLSL; editing it requests a recompile |
 | `Binary :TVkBinary` | The SPIR-V; readable and writable, so `.spv` files work too |
 | `Handle :T_VkShaderModule` | The module（created lazily, compiling at runtime if needed） |
-| `CompileOK` ／ `CompileLog` | Compile status and log |
+| `CompileOK` ／ `CompileLog` | Compile status and log. Also `True` when a `.spv` was supplied directly（no compile took place） |
 | `Bindins :TArray<TVkBinding>` | Descriptors found by reflection |
 | `Entrys :TArray<String>` | Entry points found by reflection |
 | `LocalX` ／ `LocalY` ／ `LocalZ` | `local_size` found by reflection |
@@ -419,6 +429,8 @@ The "**kernel**" is a compute pipeline. From the shader's reflection it internal
 | `Run` | Dispatch and wait |
 
 The number of workgroups is computed automatically from `GloSiz*` and the shader's `local_size`.
+
+If the shader is not compiled（a failed GLSL compile, no SPIR-V set, …）, pipeline creation is abandoned rather than handing an empty module to the driver; see `Shader.CompileLog` for the reason. `TVkRaster` behaves the same way on the graphics side, reported through `BuildOK` ／ `BuildLog`.
 
 #### ▼ `TVkParames` ／ `TVkParame`
 The parameter list and one parameter. Connect with `Parames['name'] := argument`.
@@ -719,12 +731,20 @@ Loading GLSL makes the class **compile it at runtime**（via `glslang.dll`）on 
 > _Shader.Bindins    :TArray<TVkBinding> // Reflected descriptor bindings
 > _Shader.LocalX/Y/Z :Integer            // Reflected local_size
 > ```
-The SPIR-V can also be read and written directly, so a shader can be pre-compiled and shipped as a `.spv`. Loading one requires no GLSL at all — `glslang.dll` is then never loaded — and reflection works just the same.
+The SPIR-V can also be read and written directly, so a shader can be pre-compiled and shipped as a `.spv`.
 > `Object Pascal`
 > ```Delphi
 > _Shader.Binary.SaveToFile( 'Execut.spv' );  // Compiles if necessary, then saves
 > _Shader.Binary.LoadFromFile( 'Execut.spv' );
 > ```
+
+#### ▼ 4.6.1. Shipping without `glslang.dll`
+
+`glslang.dll` is loaded **lazily**, only when a GLSL source actually has to be compiled.
+An application that ships pre-compiled `.spv` files therefore **does not need to distribute `glslang.dll` at all** — loading, reflection and execution all work without it, and no error is raised.
+
+> ※ Assign in this order: **`Source` first, `Binary` last**.
+> Writing to `Source` discards the current `Binary`（editing the GLSL must invalidate the compiled result）, so loading a `.spv` and *then* filling `Source` for display would throw the SPIR-V away.
 
 ### ⬤ 4.7. Kernel
 Arguments are connected **by name**, using the identifiers reflected from the shader.

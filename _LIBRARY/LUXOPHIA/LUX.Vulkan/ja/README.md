@@ -62,6 +62,16 @@ DLL は SPIRV-Tools 非依存（`ENABLE_OPT=OFF`）かつ CRT 静的リンク（
 
 > ※ glslang のライセンスは BSD-3-Clause ／ Apache-2.0（[`LICENSE.txt`](https://github.com/KhronosGroup/glslang/blob/main/LICENSE.txt)）であり、この再頒布が許諾されています。
 
+#### ▼ 1.2.1. GLSL のみをサポート
+
+glslang は **HLSL** もコンパイルできますが、本ライブラリは **GLSL のみ**をサポートします（`TVkShader` は常に GLSL のフロントエンドを選択します）。
+
+これは意図的なものです。glslang の HLSL フロントエンドは**非推奨であり、将来のメジャーリリースで削除されます**（[glslang issue #4210](https://github.com/KhronosGroup/glslang/issues/4210)）。将来性が無いため、これを土台にはしません。
+HLSL が必要な場合は、SPIR-V を直接出力できる [DXC](https://github.com/microsoft/DirectXShaderCompiler) を使用してください。
+なお [Slang](https://github.com/shader-slang/slang) は glslang とは全く別のコンパイラであり、glslang には含まれません。
+
+また、ソースの言語が**自動判別されることはありません**。GLSL と HLSL は `glslang_input_t.language` で明示的に選択します。
+
 ### ⬤ 1.3. [`/Core`](https://github.com/LUXOPHIA/LUX.Vulkan/tree/main/Core) ＋ [`LUX.Vulkan.pas`](https://github.com/LUXOPHIA/LUX.Vulkan/blob/main/LUX.Vulkan.pas) ：クラスライブラリの核
 
 デバイス・キュー・メモリ・シェーダ・演算パイプラインまで、グラフィックスに依存しない部分です。
@@ -393,7 +403,7 @@ TVkScene（根。親には所属できない）
 | `Source :TVkSource` | GLSL ソース。編集すると再コンパイルを要求する |
 | `Binary :TVkBinary` | SPIR-V。読み書きできるので `.spv` の入出力も可能 |
 | `Handle :T_VkShaderModule` | モジュール（遅延生成。必要なら実行時コンパイルが走る） |
-| `CompileOK` ／ `CompileLog` | コンパイルの成否とログ |
+| `CompileOK` ／ `CompileLog` | コンパイルの成否とログ。`.spv` を直接与えた場合（コンパイルを通らない）も `True` |
 | `Bindins :TArray<TVkBinding>` | 反射で得た記述子の一覧 |
 | `Entrys :TArray<String>` | 反射で得た入口関数の名前 |
 | `LocalX` ／ `LocalY` ／ `LocalZ` | 反射で得た `local_size` |
@@ -419,6 +429,8 @@ SPIR-V バイナリ。`LoadFromFile` ／ `SaveToFile` ／ `LoadFromStream` ／ `
 | `Run` | ディスパッチして完了まで待つ |
 
 ワークグループ数は `GloSiz*` とシェーダの `local_size` から自動的に計算されます。
+
+シェーダが未コンパイル（GLSL のコンパイル失敗、SPIR-V 未設定など）なら、空のモジュールをドライバへ渡さずにパイプラインの生成を打ち切ります。原因は `Shader.CompileLog` を参照してください。描画側の `TVkRaster` も `BuildOK` ／ `BuildLog` で同じように振る舞います。
 
 #### ▼ `TVkParames` ／ `TVkParame`
 仮引数のリストと、その 1 個です。`Parames['名前'] := 実引数` で接続します。
@@ -719,12 +731,20 @@ GLSL を読み込むと、最初に必要になった時点で**実行時にコ�
 > _Shader.Bindins    :TArray<TVkBinding> // 反射で得た記述子
 > _Shader.LocalX/Y/Z :Integer            // 反射で得た local_size
 > ```
-SPIR-V は直接読み書きもできるので、事前にコンパイルして `.spv` として配布することもできます。`.spv` を読み込む場合は GLSL が不要で、`glslang.dll` もロードされません。
+SPIR-V は直接読み書きもできるので、事前にコンパイルして `.spv` として配布することもできます。
 > `Object Pascal`
 > ```Delphi
 > _Shader.Binary.SaveToFile( 'Execut.spv' );  // 必要ならコンパイルしてから保存
 > _Shader.Binary.LoadFromFile( 'Execut.spv' );
 > ```
+
+#### ▼ 4.6.1. `glslang.dll` を同梱しない配布
+
+`glslang.dll` は、GLSL を実際にコンパイルする必要が生じたときにだけ**遅延ロード**されます。
+そのため、コンパイル済の `.spv` を同梱するアプリケーションであれば、**`glslang.dll` を配布する必要は一切ありません**。ロード・反射・実行のいずれも DLL 無しで動作し、エラーにもなりません。
+
+> ※ 代入は **`Source` を先に、`Binary` を後に**行なってください。
+> `Source` へ書き込むと、現在の `Binary` は破棄されます（GLSL を編集した以上、コンパイル済の結果は無効とみなすため）。`.spv` をロードした後に表示用の `Source` を代入すると、SPIR-V が捨てられてしまいます。
 
 ### ⬤ 4.7. カーネル
 実引数は、シェーダから反射した**名前で**接続します。
