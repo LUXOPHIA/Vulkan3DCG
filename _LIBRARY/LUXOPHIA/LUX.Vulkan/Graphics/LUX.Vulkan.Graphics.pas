@@ -110,9 +110,9 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
      public
        constructor Create; overload; override;
        ///// P R O P E R T Y
-       property Scene      :TVkScener  read GetScene                      ;  // 属すシーン（根が TVkScener でなければ nil）
-       property Contex     :TVkContex read GetContex                     ;  // シーンが持つコンテキスト（同 nil）
-       property Queuer     :TVkQueuer read GetQueuer                     ;  // シーンが持つキュー　　（同 nil）
+       property Scene      :TVkScener read GetScene                         ;  // 属すシーン（根が TVkScener でなければ nil）
+       property Contex     :TVkContex read GetContex                        ;  // シーンが持つコンテキスト（同 nil）
+       property Queuer     :TVkQueuer read GetQueuer                        ;  // シーンが持つキュー　　（同 nil）
        property LocalPose  :TSingleM4 read GetLocalPose  write SetLocalPose ;  // 局所行列（親ノード座標系 ← 自ノード座標系）
        property GlobalPose :TSingleM4 read GetGlobalPose write SetGlobalPose;  // 大域行列（＝ 先祖の局所行列の積）
        property Visible    :Boolean   read GetVisible    write SetVisible   ;  // 描くか（部分木ごと隠れる）
@@ -174,11 +174,11 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
        destructor Destroy; override;
        procedure AfterConstruction; override;
        ///// P R O P E R T Y
-       property Scene    :TVkScener read _Scene       ;  // 属すシーン（どこにも属さなければ nil）
-       property SizeX    :Single   read GetSizeX     write SetSizeX;  // スクリーンの幅（実寸）
-       property SizeY    :Single   read GetSizeY     write SetSizeY;  // スクリーンの高さ（実寸）
-       property NeaZ     :Single   read GetNeaZ      write SetNeaZ ;  // 前方クリップ面
-       property FarZ     :Single   read GetFarZ      write SetFarZ ;  // 後方クリップ面
+       property Scene    :TVkScener read   _Scene                ;  // 属すシーン（どこにも属さなければ nil）
+       property SizeX    :Single    read GetSizeX  write SetSizeX;  // スクリーンの幅（実寸）
+       property SizeY    :Single    read GetSizeY  write SetSizeY;  // スクリーンの高さ（実寸）
+       property NeaZ     :Single    read GetNeaZ   write SetNeaZ ;  // 前方クリップ面
+       property FarZ     :Single    read GetFarZ   write SetFarZ ;  // 後方クリップ面
        ///// E V E N T
        property OnScene :TDelegates read _OnScene;  // シーンの変化の通知（TVkScener.OnChange の転送）
        ///// M E T H O D

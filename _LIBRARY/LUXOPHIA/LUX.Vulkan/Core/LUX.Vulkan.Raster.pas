@@ -177,28 +177,28 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
        constructor Create( const Contex_:TVkContex_ ); overload; virtual;
        destructor Destroy; override;
        ///// P R O P E R T Y
-       property Contex    :TVkContex_                                 read GetOwnere                        ;
-       property Rasters   :TVkRasters_                                read GetParent                        ;
-       property Handle    :T_VkPipeline                               read GetHandle                        ;
-       property Layout    :T_VkPipelineLayout                         read GetLayout                        ;
-       property Passer    :TVkPasser_                                 read GetPasser    write SetPasser     ;  // 属する描画パス
-       property Stagers   :TVkStagers_                                read   _Stagers                       ;  // シェーダの段
-       property Bindins   :TArray<T_VkVertexInputBindingDescription>  read GetBindins   write SetBindins    ;  // 頂点バッファの束ね方
-       property Attribs   :TArray<T_VkVertexInputAttributeDescription> read GetAttribs  write SetAttribs    ;  // 頂点属性の配置
-       property SetLayouts:TArray<T_VkDescriptorSetLayout>            read GetSetLays   write SetSetLays    ;  // 記述子セットの配置（既定は無し）
-       property PushSize  :Integer                                    read GetPushSize  write SetPushSize   ;  // 押込定数のバイト数（0 なら無し）
-       property PushFlags :T_VkShaderStageFlags                       read GetPushFlags write SetPushFlags  ;  // 押込定数を読む段
-       property Topology  :T_VkPrimitiveTopology                      read GetTopology  write SetTopology   ;
-       property PolyMode  :T_VkPolygonMode                            read GetPolyMode  write SetPolyMode   ;
-       property CullMode  :T_VkCullModeFlags                          read GetCullMode  write SetCullMode   ;
-       property FrontFace :T_VkFrontFace                              read GetFrontFace write SetFrontFace  ;
-       property LineWidth :Single                                     read GetLineWidth write SetLineWidth  ;
-       property DepthTest :Boolean                                    read GetDepthTest write SetDepthTest  ;
-       property DepthWrit :Boolean                                    read GetDepthWrit write SetDepthWrit  ;
-       property DepthOper :T_VkCompareOp                              read GetDepthOper write SetDepthOper  ;
-       property BlendOK   :Boolean                                    read GetBlendOK   write SetBlendOK    ;  // 半透明合成（既定は無し）
-       property BuildOK   :Boolean                                    read GetBuildOK                       ;  // 全段のコンパイルが成功したか
-       property BuildLog  :String                                     read GetBuildLog                      ;  // 全段のコンパイルログ
+       property Contex    :TVkContex_                                  read GetOwnere                      ;
+       property Rasters   :TVkRasters_                                 read GetParent                      ;
+       property Handle    :T_VkPipeline                                read GetHandle                      ;
+       property Layout    :T_VkPipelineLayout                          read GetLayout                      ;
+       property Passer    :TVkPasser_                                  read GetPasser    write SetPasser   ;  // 属する描画パス
+       property Stagers   :TVkStagers_                                 read   _Stagers                     ;  // シェーダの段
+       property Bindins   :TArray<T_VkVertexInputBindingDescription>   read GetBindins   write SetBindins  ;  // 頂点バッファの束ね方
+       property Attribs   :TArray<T_VkVertexInputAttributeDescription> read GetAttribs   write SetAttribs  ;  // 頂点属性の配置
+       property SetLayouts:TArray<T_VkDescriptorSetLayout>             read GetSetLays   write SetSetLays  ;  // 記述子セットの配置（既定は無し）
+       property PushSize  :Integer                                     read GetPushSize  write SetPushSize ;  // 押込定数のバイト数（0 なら無し）
+       property PushFlags :T_VkShaderStageFlags                        read GetPushFlags write SetPushFlags;  // 押込定数を読む段
+       property Topology  :T_VkPrimitiveTopology                       read GetTopology  write SetTopology ;
+       property PolyMode  :T_VkPolygonMode                             read GetPolyMode  write SetPolyMode ;
+       property CullMode  :T_VkCullModeFlags                           read GetCullMode  write SetCullMode ;
+       property FrontFace :T_VkFrontFace                               read GetFrontFace write SetFrontFace;
+       property LineWidth :Single                                      read GetLineWidth write SetLineWidth;
+       property DepthTest :Boolean                                     read GetDepthTest write SetDepthTest;
+       property DepthWrit :Boolean                                     read GetDepthWrit write SetDepthWrit;
+       property DepthOper :T_VkCompareOp                               read GetDepthOper write SetDepthOper;
+       property BlendOK   :Boolean                                     read GetBlendOK   write SetBlendOK  ;  // 半透明合成（既定は無し）
+       property BuildOK   :Boolean                                     read GetBuildOK                     ;  // 全段のコンパイルが成功したか
+       property BuildLog  :String                                      read GetBuildLog                    ;  // 全段のコンパイルログ
        ///// M E T H O D
        function DeviceHandle :T_VkDevice;
        procedure FreeHandle;

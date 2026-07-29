@@ -67,13 +67,13 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
        constructor Create( const Contex_:TVkContex_ ); overload; virtual;
        destructor Destroy; override;
        ///// P R O P E R T Y
-       property Contex    :TVkContex_      read GetOwnere                       ;
-       property Passers   :TVkPassers_     read GetParent                       ;
-       property Handle    :T_VkRenderPass  read GetHandle                       ;
-       property ColorForm :T_VkFormat      read GetColorForm write SetColorForm ;  // 色添付の形式
-       property DepthForm :T_VkFormat      read GetDepthForm write SetDepthForm ;  // 深度添付の形式（UNDEFINED なら深度添付なし）
-       property ColorLast :T_VkImageLayout read GetColorLast write SetColorLast ;  // 色添付の最終レイアウト
-       property DepthOK   :Boolean         read GetDepthOK                      ;  // 深度添付を持つか
+       property Contex    :TVkContex_      read GetOwnere                      ;
+       property Passers   :TVkPassers_     read GetParent                      ;
+       property Handle    :T_VkRenderPass  read GetHandle                      ;
+       property ColorForm :T_VkFormat      read GetColorForm write SetColorForm;  // 色添付の形式
+       property DepthForm :T_VkFormat      read GetDepthForm write SetDepthForm;  // 深度添付の形式（UNDEFINED なら深度添付なし）
+       property ColorLast :T_VkImageLayout read GetColorLast write SetColorLast;  // 色添付の最終レイアウト
+       property DepthOK   :Boolean         read GetDepthOK                     ;  // 深度添付を持つか
        ///// M E T H O D
        function DeviceHandle :T_VkDevice;
        procedure FreeHandle;

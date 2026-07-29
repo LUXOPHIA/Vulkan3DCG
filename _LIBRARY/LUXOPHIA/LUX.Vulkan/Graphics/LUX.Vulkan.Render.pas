@@ -92,7 +92,7 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
        property Contex :TVkContex   read   _Contex                ;
        property Queuer :TVkQueuer   read   _Queuer                ;
        property Passer :TVkPasser   read   _Passer                ;  // この描画先の描画パス
-       property Camera :TVkCamera      read GetCamera write SetCamera;  // 描くカメラ（2D / 3D のどちらでもよい）
+       property Camera :TVkCamera   read GetCamera write SetCamera;  // 描くカメラ（2D / 3D のどちらでもよい）
        property SizeX  :Integer     read GetSizeX  write SetSizeX ;  // 横ピクセル数
        property SizeY  :Integer     read GetSizeY  write SetSizeY ;  // 縦ピクセル数
        property Color  :TVkTarget2D read   _Color                 ;  // 描画結果のイメージ

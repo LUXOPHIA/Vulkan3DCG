@@ -76,12 +76,12 @@ type
     constructor Create( AOwner_:TComponent ); override;
     destructor Destroy; override;
     ///// P R O P E R T Y
-    property Contex :TVkContex read _Contex ;  // Attach で受け取ったコンテキスト
-    property Queuer :TVkQueuer read _Queuer ;
-    property Camera :TVkCamera    read _Camera write SetCamera;  // 描くカメラ（2D / 3D のどちらでもよい）
+    property Contex :TVkContex read   _Contex                ;  // Attach で受け取ったコンテキスト
+    property Queuer :TVkQueuer read   _Queuer                ;
+    property Camera :TVkCamera read   _Camera write SetCamera;  // 描くカメラ（2D / 3D のどちらでもよい）
     property Direct :Boolean   read GetDirect write SetDirect;  // True: 子ウィンドウへ提示 ／ False: TBitmap 経由
-    property PixelX :Integer   read GetPixelX;  // 実際の横ピクセル数（DPI 込み）
-    property PixelY :Integer   read GetPixelY;  // 　　　　縦ピクセル数
+    property PixelX :Integer   read GetPixelX                ;  // 実際の横ピクセル数（DPI 込み）
+    property PixelY :Integer   read GetPixelY                ;  // 　　　　縦ピクセル数
     ///// M E T H O D
     procedure Attach( const Queuer_:TVkQueuer );
     procedure Render;
