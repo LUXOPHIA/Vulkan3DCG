@@ -1,0 +1,85 @@
+﻿object Form1: TForm1
+  Left = 0
+  Top = 0
+  Caption = 'Vulkan 3DCG'
+  ClientHeight = 620
+  ClientWidth = 800
+  Position = ScreenCenter
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  DesignerMasterStyle = 0
+  object PanelB: TPanel
+    Align = Bottom
+    Position.Y = 460.000000000000000000
+    Size.Width = 800.000000000000000000
+    Size.Height = 160.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 0
+    object CheckD: TCheckBox
+      Align = Top
+      IsChecked = True
+      Margins.Left = 8.000000000000000000
+      Margins.Top = 8.000000000000000000
+      Margins.Right = 8.000000000000000000
+      Position.X = 8.000000000000000000
+      Position.Y = 8.000000000000000000
+      Size.Width = 784.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      Text = 'Direct ( OFF なら TVkRender 経由で TBitmap に描く )'
+      OnChange = CheckDChange
+    end
+    object CheckT: TCheckBox
+      Align = Top
+      IsChecked = True
+      Margins.Left = 8.000000000000000000
+      Margins.Right = 8.000000000000000000
+      Position.X = 8.000000000000000000
+      Position.Y = 30.000000000000000000
+      Size.Width = 784.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+      Text = 'Rotate ( TTimer )'
+      OnChange = CheckTChange
+    end
+    object MemoS: TMemo
+      Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
+      DataDetectorTypes = []
+      StyledSettings = [Size, Style, FontColor]
+      TextSettings.Font.Family = 'MS Gothic'
+      Align = Client
+      Margins.Left = 8.000000000000000000
+      Margins.Top = 4.000000000000000000
+      Margins.Right = 8.000000000000000000
+      Margins.Bottom = 8.000000000000000000
+      Size.Width = 784.000000000000000000
+      Size.Height = 96.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 2
+      Viewport.Width = 780.000000000000000000
+      Viewport.Height = 92.000000000000000000
+    end
+  end
+  inline Viewer: TVkViewer
+    Align = Client
+    Size.Width = 800.000000000000000000
+    Size.Height = 460.000000000000000000
+    Size.PlatformDefault = False
+    OnMouseDown = ViewerMouseDown
+    OnMouseMove = ViewerMouseMove
+    OnMouseUp = ViewerMouseUp
+    OnMouseWheel = ViewerMouseWheel
+  end
+  object Timer1: TTimer
+    Enabled = False
+    Interval = 16
+    OnTimer = Timer1Timer
+    Left = 40
+    Top = 40
+  end
+end
